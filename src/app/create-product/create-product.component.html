@@ -1,0 +1,126 @@
+<!-- <div class="row">
+  <div class="col-md-10 "> -->
+<!-- <h1 class="page-header"></h1> -->
+<form [formGroup]="myForm" (ngSubmit)="onSubmit(myForm)" class="form">
+  
+  <!-- show status of the form submission  -->
+  <div role="alert" class="alert alert-success alert-dismissible fade show" 
+       *ngIf="isSuccess && isSubmitted">
+       <button type="button" class="close" onclick="$('.alert').hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <span class="fa fa-check"></span> Successfully Added
+  </div> 
+  
+  <div role="alert" class="alert alert-danger" 
+       *ngIf="!isSuccess && isSubmitted">
+       <button type="button" class="close" onclick="$('.alert').hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <span class="fa fa-times"></span> {{ errormessage }} 
+  </div>
+
+  <div class="row">
+    <div class="col-sm-9 col-md-9 col-lg-8">
+
+      <fieldset>
+        <!-- Form Name -->
+        <legend class="row-bordered">Create Product</legend>
+        <!-- <input formControlName="name" placeholder="Product name">
+        <div *ngIf="myForm.get('name').hasError('required')" class="error">
+            Oops, please provide a name!
+          </div> -->
+
+        <div class="form-group">
+          <label for="name">Name: </label>
+          <!-- <input type="text" name="name" [(ngModel)]="person.name" required #name="ngModel"> -->
+          <input formControlName="name" trim class="form-control" placeholder="Product name">
+          <!-- <div [hidden]="name.valid || name.pristine" class="error">
+              Name is required my good sir/lady!
+            </div> -->
+          <div *ngIf="myForm.get('name').hasError('required') && myForm.controls['name'].touched" 
+               role="alert" class="alert alert-danger">
+            Oops, please provide a name!
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="price">Price: </label>
+
+          <input formControlName="price" class="form-control" placeholder="Price">
+          <div role="alert" class="alert alert-danger" *ngIf="myForm.controls.price.hasError('pattern')">
+            invalid price pattern: must be a number!
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="description">Description: </label>
+          <!-- <textarea  formControlName="description"></textarea> -->
+          <textarea formControlName="description" class="form-control" id="exampleTextarea" rows="3" placeholder="Description" maxlength="100"></textarea>
+          <!-- <input formControlName="description" class="form-control" placeholder="Description"> -->
+          <div role="alert" class="alert alert-danger" *ngIf="!myForm.controls['description'].valid && myForm.controls['description'].touched">
+            You must specify a description that's between 10 and 100 characters.
+          </div>
+          <!-- <div *ngIf="myForm.controls.description.errors.minlength">
+                  Write something longer please!
+                </div> -->
+        </div>
+
+        <button type="submit" [disabled]="myForm.invalid" class="btn btn-lg btn-primary" [ngClass]="{disabled : myForm.invalid}"
+          tooltip-placement="top" tooltip-is-open="myForm.invalid" title="{{ myForm.invalid ? 'Fill all inputs to submit' : 'Submit' }}">
+          Create
+        </button>
+
+        <button type="reset" class="btn btn-lg btn-danger">
+          <span class="fa fa-times-circle-o"></span> Reset</button>
+      </fieldset>
+      
+    </div>
+    <!-- <div class="col-md-2 hidden-xs">
+      <img src="http://websamplenow.com/30/userprofile/images/avatar.jpg" class="img-responsive img-thumbnail ">
+    </div> -->
+    <div class="col-sm-3 col-md-3 col-lg-4 item-photo">
+      <!-- <div class="centerBlock"> -->
+      <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+          <h3 class="panel-title pull-left">Product Image</h3>
+        </div>
+        <div class="file-tab panel-body">
+          <div class="text-center">
+            <img [src]="imageUrl" class="rounded mx-auto d-block img-thumbnail" />
+
+            <div *ngIf="currentFileUpload" class="progress">
+                <div class="progress-bar progress-bar-striped"
+                [ngClass]="(isValidUpload)?'bg-info':'bg-danger'"
+                  role="progressbar" attr.aria-valuenow="{{progress.percentage}}"
+                  aria-valuemin="0" aria-valuemax="100"
+                  [ngStyle]="{width:progress.percentage+'%'}">
+                  {{progress.percentage}}%</div>
+              </div>
+
+              <!-- <img class="rounded mx-auto d-block img-thumbnail" src='assets/images/testProduct.png' /> -->
+          </div>
+          <div class="form-group">
+    
+            <input type="file" formControlName="productImage" 
+                   class="form-control-file fileUpload btn" id="exampleFormControlFile1" 
+                   aria-describedby="fileHelp"
+                   data-max-size="5120" (change)="onFileChange($event)">
+            <small id="fileHelp" class="form-text text-muted">
+              Only images less than 5Mb can be uploaded.
+            </small>
+    
+            <div role="alert" class="alert alert-danger" 
+                 *ngIf="!myForm.controls['productImage'].valid && myForm.controls['productImage'].touched">
+              Invalid file
+            </div>
+
+            
+
+          </div>
+        </div>
+    
+      </div>
+    </div>
+  </div>
+</form>
+

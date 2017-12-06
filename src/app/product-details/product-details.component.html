@@ -1,0 +1,50 @@
+<p>
+  product-details works!
+</p>
+<div *ngIf="product">
+    <h2>{{ product.name | uppercase }} Details</h2>
+</div>
+
+<div class="row">
+  <div class="col-xs-4 item-photo">
+       <img style="max-width:100%;" src="assets/images/default.png" />
+   </div>
+
+   <div class="col-xs-5" style="border:0px solid gray">
+    <!-- product details section -->
+    <h3>{{ product.name }}</h3>
+    
+      <!-- Price -->
+      <h6 class="title-price"><small>PRICE</small></h6>
+      <h3 style="margin-top:0px;">{{ product.price }}</h3>
+
+    <!-- Details of the product -->
+    <div class="section">
+        <p>{{ product.description }}</p>
+    </div>
+
+      
+      <div class="section" style="padding-bottom:20px;">
+        <button class="btn btn-success">
+          <span style="margin-right:20px" class="fa fa-shopping-cart" aria-hidden="true"></span> 
+          Add to Cart
+        </button>
+      </div>
+
+      <div class="section" style="padding-bottom:20px;">          
+        <button class="btn btn-danger" (click)="deleteProduct(product.productIndex)">
+            <span style="margin-right:20px" class="fa fa-close" aria-hidden="true"></span> 
+            Remove product
+          </button>
+      </div>    
+      <div class="section" style="padding-bottom:20px;">          
+        <button class="btn btn-outline-primary" (click)="goBack()">go back</button>
+      </div>
+   </div>
+
+</div>
+
+
+<div *ngIf="!product">
+  error getting product details..
+</div>
