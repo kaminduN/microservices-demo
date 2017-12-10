@@ -16,6 +16,7 @@ import org.glassfish.jersey.server.ServerProperties;
 import com.kamsoft.product_api.errorhandling.AppExceptionMapper;
 import com.kamsoft.product_api.errorhandling.GenericExceptionMapper;
 import com.kamsoft.product_api.filter.CORSResponseFilter;
+import com.kamsoft.product_api.resources.HealthCheckResource;
 import com.kamsoft.product_api.resources.ProductsResource;
 
 /**
@@ -56,6 +57,7 @@ public class App
                         AppExceptionMapper.class.getCanonicalName(),// registering the exception mapper.
                         GenericExceptionMapper.class.getCanonicalName(),
                         CORSResponseFilter.class.getCanonicalName(), // CORS headers
+                        HealthCheckResource.class.getCanonicalName(), // health check path
                         ProductsResource.class.getCanonicalName())));
         jerseyServlet.setInitParameter(
                 "com.sun.jersey.spi.container.ContainerResponseFilters", 
