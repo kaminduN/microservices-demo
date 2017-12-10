@@ -14,7 +14,9 @@ import { Location } from '@angular/common';
 })
 export class ProductDetailsComponent implements OnInit {
   @Input() product: Product;
-
+  public loading = false;
+  public deleted = false;
+  public isError = false;
   constructor(private route: ActivatedRoute, 
               private http: HttpClient,
               private location: Location) { }
@@ -40,15 +42,17 @@ export class ProductDetailsComponent implements OnInit {
 
   fetchProduct(id: string){
       console.log(environment.apiUrl +  environment.productApi + "/" + id);
-    
+      // this.isError = false;
       this.http.get<Product>(environment.apiUrl +  environment.productApi  + "/" + id)
         .subscribe(res => {
               console.log(res);
               this.product = res;
               // this.product.name = res.
+              
             },
             err => {
               console.log('Error occured');
+              this.isError = true;
             }
       );
   
@@ -60,67 +64,82 @@ export class ProductDetailsComponent implements OnInit {
 
     deleteProduct(id: string): void{
       console.log('deleting.. '+ id);
-      if(confirm("Are you sure to delete this product ?")) {
-        console.log("calling delete functionality");
-
-        // actual delete operation
-        this.http.delete(environment.apiUrl +  environment.productApi  + "/" + id)
-            .subscribe(res => {
+        if(confirm("Are you sure to delete this product ?")) {
+          console.log("calling delete functionality");
+          this.loading = true;
+          // actual delete operation
+          // first image
+          this.http.delete(environment.contentApiUrl + '/' + this.product.productimage)
+                .subscribe(res => {
                   console.log(res);
                   // this.product.name = res.
                   // this.goBack(); // go back if success..
-                  alert("Product deleted");
-                  this.deleteProductImage(this.product.productimage);
-                  this.goBack();
-                  
+                  // alert("Product image deleted");
+                  // this.goBack();
+                  // once succeeded the description
+                  this.deleteProductDesc(id);
+                  this.isError = false;
                 },
                 err => {
-                  console.log('Error occured while deleting..');
+                  console.log('Error occured while deleting image..');
                   console.log(err);
+                  this.loading = false;
+                  this.isError = true;
+                  console.log("Product deletion faliure: code 1");
                 }
           );
-        
-
-      }
-      
-      // actual delete operation
-    //   this.http.delete(environment.apiUrl +  environment.productApi  + "/" + id)
-    //   .subscribe(res => {
-    //         console.log(res);
-    //         // this.product.name = res.
-    //         // this.goBack(); // go back if success..
-    //       },
-    //       err => {
-    //         console.log('Error occured while deleting..');
-    //         console.log(err);
-    //       }
-    // );
-      // this.goBack();
+        }      
     }
 
-    deleteProductImage(imageUrl : string){
-      this.http.delete(environment.contentApiUrl + '/' + imageUrl)
-      .subscribe(res => {
-            console.log(res);
-            // this.product.name = res.
-            // this.goBack(); // go back if success..
-            alert("Product image deleted");
-            // this.goBack();
-            
-          },
-          err => {
-            console.log('Error occured while deleting image..');
-            console.log(err);
-          }
-      );
-    }
+  deleteProductDesc(id:string){
+    this.http.delete(environment.apiUrl +  environment.productApi  + "/" + id)
+    .subscribe(res => {
+          console.log(res);
+          // this.product.name = res.
+          // this.goBack(); // go back if success..
+          console.log("Product deleted");
+          // this.deleteProductImage(this.product.productimage);
+          // move this to next call since that is async
+          // this.product = null;
+          // this.loading = false;
+          // this.deleted = true;
+          // this.goBack();
+          this.postDelete();
+          
+        },
+        err => {
+          console.log('Error occured while deleting..');
+          console.log(err);
+          console.log("Product deletion faliure: code 2");
+          this.loading = false;
+          this.isError = true;
+        }
+  );
+  }
 
-    getImageUrl(imageUrl : string){
-      return environment.contentApiUrl + '/' + imageUrl;
-    }
+  postDelete(){
+    this.product = null;
+    this.loading = false;
+    this.deleted = true;
+    this.isError = false;
+    setTimeout(()=>{
+        this.goBack();  
+    }, 3000);// wait 3secs befor going back to main page
+    
+  }
 
-    setDefaultPic(event) {
-      console.debug(event);
-      event.target.src = environment.placeholdImage;
-    }
+  getImageUrl(imageUrl: string) {
+    return environment.contentApiUrl + '/' + imageUrl;
+  }
+
+  // used in the loading spinner
+  imgloading: boolean = true
+  onImageLoad() {
+      this.imgloading = false;
+  }
+
+  setDefaultPic(event) {
+    console.debug(event);
+    event.target.src = environment.placeholdImage;
+  }
 }
