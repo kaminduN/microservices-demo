@@ -36,7 +36,7 @@ public class App {
       
         before((request, response) -> {
             response.header("Access-Control-Allow-Origin", "*");
-            response.header("Access-Control-Request-Method", "GET,PUT,POST,DELETE,OPTIONS");
+            response.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
             response.header("Access-Control-Allow-Headers", 
                         "Content-Type, Authorization, X-Requested-With, Content-Length, Accept, Origin,");
 //          response.header("Access-Control-Allow-Credentials", "true");
@@ -49,6 +49,12 @@ public class App {
 //            
 //        });
    
+        get("/health", (request, response) -> {
+            // health check status return
+            response.status(200);
+            return "OK";
+        });
+
         get("/content/*/*", (request, response) -> {
             // return image
             // /content/<timestamp>/image_name
@@ -89,7 +95,7 @@ public class App {
            response.status(200);
            return "OK";
         });
-        
+
         post("/content/upload", (request, response) -> {
             long maxFileSize = 100000000;       // the maximum size allowed for uploaded files
             long maxRequestSize = 100000000;    // the maximum size allowed for multipart/form-data requests
@@ -130,10 +136,33 @@ public class App {
             return json.toJson(responcedata);
         });
         
+
+        options("/content/*/*", (request, response) -> {
+            // cors request solution for delete..
+            // this or remove the options header from the allowed method headers
+            response.status(200);
+            return "OK";
+         });
+
         delete("/content/*/*", (request, response) -> {
             // /content/<timestamp>/image_name
+            ContentS3DAO dao = new ContentS3DAO();
+            try {
+                dao.deleteProduct("content/" + request.splat()[0] + "/" + request.splat()[1]);
+            }catch (AmazonS3Exception e) {
+                // no such key is the main reason..
+                e.printStackTrace();
+                response.status(404);
+                return "{ \"error\": \"" + e.getMessage() + "\", \"status\": \"FAILED\"}" ;
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.status(500);
+                return "{ \"error\": \"" + e.getMessage() + "\", \"status\": \"FAILED\"}" ;
+            }
             response.header("Content-Type", "application/json");
-            return "{}";
+            response.status(202);
+            return "{ \"status\": \"SUCCESS\"}" ;
             
         });
 
