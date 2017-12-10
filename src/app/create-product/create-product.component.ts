@@ -34,9 +34,9 @@ export class CreateProductComponent implements OnInit {
 
   ngOnInit() {
     this.myForm = this.fb.group({
-      name: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9]*'), Validators.nullValidator]],
+      name: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9_ ]*'), Validators.nullValidator]],
       price: ['', [Validators.required, Validators.pattern('[0-9.]*')]],
-      description: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
+      description: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(300)]],
       productImage: ['', Validators.required ],
       image: null
     });
@@ -131,12 +131,16 @@ resetFileInput(){
     // console.log('Valid?', form.valid); // true or false
     console.log('Name', form.value.name);
     // form.value.name = form.value.name.replace(/\s/g,'');
-    // if( !form.value.name.trim().length ) {
-    //   // only white-spaces
-    //   console.log('invalid');
-    //   this.isSuccess = false;
-    //   return null;
-    // }
+    console.log("|"+ form.value.name.trim()+"|");
+    // console.log();
+    
+    if( !form.value.name.trim().length ) {
+      // only white-spaces
+      console.log('invalid');
+      this.myForm.get('name').setErrors({"required": true});
+      this.isSuccess = false;
+      return null;
+    }
     console.log('Name', form.value.name);
     console.log('Valid?', form.valid); // true or false
     console.log(form.value.name.replace(/\s/g,''));
@@ -178,6 +182,7 @@ resetFileInput(){
         console.log('File is completely uploaded!');
         console.log(event);
         console.log(event.body);
+        this.isValidUpload = true;
         let resp = event.body as UploadResp;
         product.productimage = resp.productUrl;
         this.addProduct(product);
@@ -231,6 +236,10 @@ resetFileInput(){
         console.log('addding product');
         
         this.isSuccess = true;
+        alert("Product Added")
+        console.log("Implement functionality here..");
+        this.myForm.reset();
+        this.isSubmitted = false;
       }),
       err => {
         console.log('Error occured');

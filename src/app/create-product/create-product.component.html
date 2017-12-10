@@ -55,18 +55,23 @@
         <div class="form-group">
           <label for="description">Description: </label>
           <!-- <textarea  formControlName="description"></textarea> -->
-          <textarea formControlName="description" class="form-control" id="exampleTextarea" rows="3" placeholder="Description" maxlength="100"></textarea>
+          <textarea formControlName="description" 
+              class="form-control" id="exampleTextarea" rows="3" 
+              placeholder="Description" maxlength="300"></textarea>
           <!-- <input formControlName="description" class="form-control" placeholder="Description"> -->
-          <div role="alert" class="alert alert-danger" *ngIf="!myForm.controls['description'].valid && myForm.controls['description'].touched">
-            You must specify a description that's between 10 and 100 characters.
+          <div role="alert" class="alert alert-danger" 
+              *ngIf="!myForm.controls['description'].valid && myForm.controls['description'].touched">
+            You must specify a description that's between 10 and 300 characters.
           </div>
           <!-- <div *ngIf="myForm.controls.description.errors.minlength">
                   Write something longer please!
                 </div> -->
         </div>
 
-        <button type="submit" [disabled]="myForm.invalid" class="btn btn-lg btn-primary" [ngClass]="{disabled : myForm.invalid}"
-          tooltip-placement="top" tooltip-is-open="myForm.invalid" title="{{ myForm.invalid ? 'Fill all inputs to submit' : 'Submit' }}">
+        <button type="submit" [disabled]="myForm.invalid" 
+          class="btn btn-lg btn-primary" [ngClass]="{disabled : myForm.invalid}"
+          tooltip-placement="top" tooltip-is-open="myForm.invalid" 
+          title="{{ myForm.invalid ? 'Fill all inputs to submit' : 'Submit' }}">
           Create
         </button>
 

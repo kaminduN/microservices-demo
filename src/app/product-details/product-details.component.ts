@@ -18,7 +18,7 @@ export class ProductDetailsComponent implements OnInit {
   constructor(private route: ActivatedRoute, 
               private http: HttpClient,
               private location: Location) { }
-
+  
   ngOnInit() {
     this.getProduct();
   }
@@ -59,17 +59,68 @@ export class ProductDetailsComponent implements OnInit {
     }
 
     deleteProduct(id: string): void{
+      console.log('deleting.. '+ id);
+      if(confirm("Are you sure to delete this product ?")) {
+        console.log("calling delete functionality");
 
+        // actual delete operation
+        this.http.delete(environment.apiUrl +  environment.productApi  + "/" + id)
+            .subscribe(res => {
+                  console.log(res);
+                  // this.product.name = res.
+                  // this.goBack(); // go back if success..
+                  alert("Product deleted");
+                  this.deleteProductImage(this.product.productimage);
+                  this.goBack();
+                  
+                },
+                err => {
+                  console.log('Error occured while deleting..');
+                  console.log(err);
+                }
+          );
+        
+
+      }
+      
       // actual delete operation
-      this.http.delete(environment.apiUrl +  environment.productApi  + "/" + id)
+    //   this.http.delete(environment.apiUrl +  environment.productApi  + "/" + id)
+    //   .subscribe(res => {
+    //         console.log(res);
+    //         // this.product.name = res.
+    //         // this.goBack(); // go back if success..
+    //       },
+    //       err => {
+    //         console.log('Error occured while deleting..');
+    //         console.log(err);
+    //       }
+    // );
+      // this.goBack();
+    }
+
+    deleteProductImage(imageUrl : string){
+      this.http.delete(environment.contentApiUrl + '/' + imageUrl)
       .subscribe(res => {
             console.log(res);
             // this.product.name = res.
+            // this.goBack(); // go back if success..
+            alert("Product image deleted");
+            // this.goBack();
+            
           },
           err => {
-            console.log('Error occured while deleting..');
+            console.log('Error occured while deleting image..');
+            console.log(err);
           }
-    );
-      this.goBack();
+      );
+    }
+
+    getImageUrl(imageUrl : string){
+      return environment.contentApiUrl + '/' + imageUrl;
+    }
+
+    setDefaultPic(event) {
+      console.debug(event);
+      event.target.src = environment.placeholdImage;
     }
 }

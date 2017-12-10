@@ -6,8 +6,8 @@
 export const environment = {
   production: false,
   title: 'app-dev',
-  apiUrl: 'http://localhost:8081/api',
-  contentApiUrl: 'http://localhost:8080',
+  apiUrl: 'http://ELB-product-api-400783613.us-east-2.elb.amazonaws.com:8080/api',
+  contentApiUrl: 'http://ELB-product-api-400783613.us-east-2.elb.amazonaws.com:8080',
   productApi: '/products',
   contentApi: '/files/',
   defaultimageUrl:'assets/images/testProduct.png',
