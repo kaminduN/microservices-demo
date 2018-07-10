@@ -1,0 +1,16 @@
+.center-block {
+    margin-left:auto;
+    margin-right:auto;
+    display:block;
+ }
+
+ .row-bordered:after {
+    content: "";
+    display: block;
+    border-bottom: 1px solid #ccc;
+    margin: 0 15px;
+  }
+
+  .btn.btn-primary[disabled] {
+    background-color: #525352;
+}

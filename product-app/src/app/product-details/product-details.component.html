@@ -1,0 +1,105 @@
+<!-- overlay spinner -->
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+
+<div *ngIf="product">
+    
+  <div role="alert" class="alert alert-danger" *ngIf="product && isError">
+    <button type="button" class="close" onclick="$('.alert').hide()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <span class="fa fa-times"></span> Error in product delete
+  </div>
+
+  <h2>{{ product.name | uppercase }} Details</h2>
+
+    <div class="row">
+      <div class="col-sm-8 col-xs-8 item-photo">
+        <!-- <img style="max-width:100%;"
+                      [src]="getImageUrl(product.productimage)"
+                      (error)="setDefaultPic($event)"/> -->
+      
+        <!-- spinner to indicate loading of the image -->
+        <!-- element centering using d-flex 
+             https://stackoverflow.com/a/42252877 -->
+        <div *ngIf="imgloading" class="d-flex h-100">
+          <div class="w-100 justify-content-center align-self-center">
+            <div class="center-block-load loader"></div>
+          </div>
+      
+        </div>
+        <div  class="d-flex">
+          <img class="center-block-load" [hidden]="imgloading" 
+            (load)="onImageLoad()" [src]="getImageUrl(product.productimage)" 
+            (error)="setDefaultPic($event)"
+            [alt]="product.name">
+        </div>
+      
+      </div>
+
+
+
+      <div class="col-sm-4 col-xs-4" style="border:0px solid gray">
+        <!-- product details section -->
+        <h3>{{ product.name }}</h3>
+        
+          <!-- Price -->
+          <h6 class="title-price"><small>PRICE</small></h6>
+          <h3 style="margin-top:0px;">{{ product.price }} $.</h3>
+
+        <!-- Details of the product -->
+        <div class="section">
+            <p>{{ product.description }}</p>
+        </div>
+
+        <div class="section" style="padding-bottom:20px;">
+          <h6 class="title-attr">
+            <small>Quantity</small>
+          </h6>
+          <div class="input-group">
+            <div class="btn-minus input-group-addon">
+              <span class="fa fa-minus"></span>
+            </div>
+            <input value="1" />
+            <div class="btn-plus input-group-addon">
+              <span class="fa fa-plus"></span>
+            </div>
+          </div>
+        </div>
+          <div class="section" style="padding-bottom:20px;">
+            <button class="btn btn-success">
+              <span style="margin-right:20px" class="fa fa-shopping-cart" aria-hidden="true"></span> 
+              Add to Cart
+            </button>
+          </div>
+
+          <div class="section" style="padding-bottom:20px;">          
+            <button class="btn btn-danger" (click)="deleteProduct(product.productIndex)">
+                <span style="margin-right:20px" class="fa fa-close" aria-hidden="true"></span> 
+                Remove product
+              </button>
+          </div>    
+          <div class="section" style="padding-bottom:20px;">          
+            <button class="btn btn-outline-primary" (click)="goBack()">go back</button>
+          </div>
+      </div>
+
+    </div>
+
+</div>
+
+<div role="alert" class="alert alert-danger" 
+     *ngIf="!product && !deleted && isError">
+  <button type="button" class="close" onclick="$('.alert').hide()" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <span class="fa fa-times"></span> Error getting product details.. 
+</div>
+
+<div role="alert" class="alert alert-success alert-dismissible fade show" 
+      *ngIf="!product && deleted">
+      <button type="button" class="close" onclick="$('.alert').hide()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <span class="fa fa-check"></span> Product Successfully Deleted
+</div>
+
