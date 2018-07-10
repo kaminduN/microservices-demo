@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+
+	<Properties>
+        <Property name="filename">./logs/logging.log</Property>
+		<Property name="log-path">./logs/</Property>
+		<Property name="log-pattern">%d [%t] %p %c %m%n</Property>
+    </Properties>
+
+    <Appenders>
+
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${log-pattern}" />
+        </Console>
+
+		<RollingFile name="RollingFile" 
+					 fileName="${log-path}/logging.log"
+					 filePattern="${log-path}/logging-%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout>
+				<pattern>${log-pattern}</pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="1 MB"/>
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+		</RollingFile>
+
+		<Failover name="FailoverAppender" primary="RollingFile">
+		    <Failovers>
+		        <AppenderRef ref="Console" />
+		    </Failovers>
+		</Failover>
+
+    </Appenders>
+    
+    <Loggers>
+    	<Logger name="org.eclipse.jetty" level="INFO" />
+    
+        <Root level="DEBUG">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+
+</Configuration>
